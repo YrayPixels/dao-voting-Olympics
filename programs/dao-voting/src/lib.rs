@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 
-declare_id!("3XAjSRa2BLWQP5Vmk5h7MbUHZz5u9Vf5y4aYFF4hBQ23");
+declare_id!("HA5DYrM5MXrGXwLbsXteRGqCZ3YBMLpyWyzygziL9NG4");
 
 #[program]
 pub mod dao_voting {
