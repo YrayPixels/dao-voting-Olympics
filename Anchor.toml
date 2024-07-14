@@ -2,17 +2,17 @@
 seeds = false
 skip-lint = false
 
-[programs.Localnet]
+[programs.devnet]
 dao_voting = "3XAjSRa2BLWQP5Vmk5h7MbUHZz5u9Vf5y4aYFF4hBQ23"
 
 [registry]
 url = "https://api.apr.dev"
 
 
-
 [provider]
-cluster = "Localnet"
-wallet = "/Users/maskyray/.config/solana/id.json"
+cluster = "https://api.devnet.solana.com"
+wallet = "~/.config/solana/id.json"
+
 
 [scripts]
 test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"
