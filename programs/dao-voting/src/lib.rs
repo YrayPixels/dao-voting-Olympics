@@ -1,16 +1,18 @@
 use anchor_lang::prelude::*;
 
-declare_id!("HA5DYrM5MXrGXwLbsXteRGqCZ3YBMLpyWyzygziL9NG4");
+declare_id!("6djmf7tNL9crd1H61cX9vqRyX9SQwQs8GqJbDb1gfQgf");
 
 #[program]
 pub mod dao_voting {
     use super::*;
     pub fn create_proposal(
         ctx: Context<CreateProposal>,
+        unique_id: u64,
         title: String,
         description: String,
     ) -> Result<()> {
         let proposal = &mut ctx.accounts.proposal;
+        proposal.id = unique_id;
         proposal.title = title;
         proposal.description = description;
         proposal.votes_yes = 0;
@@ -51,8 +53,9 @@ pub mod dao_voting {
 }
 
 #[derive(Accounts)]
+#[instruction(unique_id: u64)]
 pub struct CreateProposal<'info> {
-    #[account(init, payer = user,  space = 8 + 40 + 8 + 8, seeds = ["proposals".as_ref(),user.key().as_ref()], bump)]
+    #[account(init, payer = user,  space = 8 + 40 + 8 + 8 + 8 + 8, seeds = ["proposals".as_ref(),user.key().as_ref(), &unique_id.to_le_bytes()], bump)]
     pub proposal: Account<'info, Proposal>,
     #[account(mut)]
     pub user: Signer<'info>,
@@ -63,7 +66,7 @@ pub struct CreateProposal<'info> {
 pub struct Vote<'info> {
     #[account(mut)]
     pub proposal: Account<'info, Proposal>,
-    #[account(init_if_needed, payer = user, space = 8 + 1 + 8, seeds=["voter".as_ref(), user.key().as_ref()], bump)]
+    #[account(init_if_needed, payer = user, space =8 + 1 + 8 + 32, seeds=["voter".as_ref(), user.key().as_ref()], bump)]
     pub voter: Account<'info, Voter>,
     #[account(mut)]
     pub user: Signer<'info>,
@@ -77,6 +80,7 @@ pub struct GetResults<'info> {
 
 #[account]
 pub struct Proposal {
+    pub id: u64,
     pub title: String,
     pub description: String,
     pub votes_yes: u64,
